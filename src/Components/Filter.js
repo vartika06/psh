@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 const Filter = props => {
   return (
     <div style={{ display: "inline" }}>
-      <button style={{ display: "inline" }}>Select Filter</button>
+      <button className="filterBtn" style={{ display: "inline" }}>
+        Select Filter
+      </button>
     </div>
   );
 };
