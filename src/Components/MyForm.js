@@ -15,7 +15,12 @@ const MyForm = props => {
         >
           <div className="field">
             <label htmlFor="company">Company</label>
-            <input type="text" name="company" id="company" />
+            <input
+              type="text"
+              name="company"
+              id="company"
+              style={{ marginLeft: "100px", width: "526px", height: "40px" }}
+            />
           </div>
           <div className="field" style={{ display: "inline" }}>
             <label htmlFor="from">From</label>
@@ -24,15 +29,22 @@ const MyForm = props => {
               id="from"
               name="from"
               placeholder="DD/MM/YYYY"
-              style={{ width: "151px", height: "39px" }}
+              style={{
+                width: "151px",
+                height: "39px",
+                marginLeft: "135px"
+              }}
             />
-            <label htmlFor="to"> To</label>
+            <label htmlFor="to" style={{ marginLeft: "140px" }}>
+              {" "}
+              To
+            </label>
             <input
               type="text"
               id="to"
               name="to"
               placeholder="DD/MM/YYYY"
-              style={{ width: "171px", height: "41px" }}
+              style={{ width: "171px", height: "41px", marginLeft: "40px" }}
             />
           </div>
         </div>
