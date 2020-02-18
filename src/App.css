@@ -15,10 +15,26 @@
   left: 121px;
 }
 
-.formHeading {
+.formHeading,
+.thanksHeading {
   color: #673ab7;
   font-size: 25px;
   font-weight: 700;
+  font-style: normal;
+  text-decoration: none;
+  text-align: left;
+}
+
+.thanksHeading {
+  transform: translate(295px, 130px);
+}
+
+.thanksContent {
+  transform: translate(295px, 155px);
+  color: #2196f3;
+  font-family: "Source Sans Pro";
+  font-size: 17px;
+  font-weight: normal;
   font-style: normal;
   text-decoration: none;
   text-align: left;
@@ -31,6 +47,7 @@
   font-style: normal;
   text-decoration: none;
   text-align: left;
+  padding-top: 50px;
 }
 
 .submitBtn {
@@ -64,6 +81,7 @@
 }
 
 .filterBtn {
+  transform: translate(650px, -40px);
   width: 100px;
   height: 37px;
   color: #2196f3;
@@ -76,9 +94,129 @@
   background: #ffffff;
   border: 1px solid #2196f3;
   border-radius: 5px;
-  margin-left: 250px;
+  margin-left: 200px;
 }
 
-.content {
-  padding-top: 200px;
+.myCalendar {
+  transform: translate(224px, 135px);
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  width: 831px;
+
+  background: rgba(231, 227, 247, 0.3);
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgba(189, 189, 189, 1);
+  padding: 10px;
+}
+
+.myCalendar:hover {
+  cursor: pointer;
+}
+
+.monthRow {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column: 1 / span 7;
+  padding: 15px;
+}
+
+.contentCalendar {
+  display: grid;
+  grid-column: 1 / span 7;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  padding: 15px;
+}
+
+.prevControl {
+  grid-column: 1 / span 2;
+  justify-self: end;
+}
+
+.month {
+  grid-column: 3 / span 3;
+  justify-self: center;
+  color: #212121;
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.nextControl {
+  grid-column: 6 / span 2;
+  justify-self: start;
+}
+
+.calendarYear {
+  grid-column: 1 / span 7;
+  color: #4b3b94;
+  font-size: 28px;
+  font-weight: bold;
+  font-style: normal;
+  text-decoration: none;
+  text-align: left;
+  padding-left: 5px;
+}
+
+.prevControl,
+.nextControl {
+  color: #2196f3;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.date {
+  padding: 15px;
+  justify-self: center;
+  color: #9e9e9e;
+  font-size: 17px;
+}
+
+.calendarBtns {
+  grid-column: 1 / span 7;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+.button-cancel {
+  grid-column: 1 / span 6;
+  justify-self: end;
+}
+
+.button-cancel button {
+  width: 100px;
+  height: 32px;
+  color: #ffffff;
+  font-family: "Source Sans Pro";
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  text-align: center;
+  background: rgba(244, 67, 54, 0.8);
+  border: 1px solid #f44336;
+  border-radius: 5px;
+}
+
+.button-apply {
+  justify-self: center;
+}
+
+.button-apply button {
+  width: 100px;
+  height: 32px;
+  color: #ffffff;
+  font-family: "Source Sans Pro";
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  text-align: center;
+  background: rgba(76, 175, 80, 0.8);
+  border: 1px solid #4caf50;
+  border-radius: 5px;
+}
+
+button:focus {
+  outline: none;
+  cursor: pointer;
 }
