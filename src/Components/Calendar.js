@@ -7,6 +7,18 @@ class Calendar extends React.Component {
     date: moment()
   };
 
+  onNext = () => {
+    this.setState({
+      date: moment(this.state.date, "YYYY-MM--DD").add(1, "month")
+    });
+  };
+
+  onPrev = () => {
+    this.setState({
+      date: moment(this.state.date, "YYYY-MM--DD").subtract(1, "month")
+    });
+  };
+
   render() {
     const days = moment(this.state.date, "YYYY-MM").daysInMonth();
     const year = moment(this.state.date).format("YYYY");
@@ -25,9 +37,13 @@ class Calendar extends React.Component {
       <div className="myCalendar">
         <div className="calendarYear">Calendar {year}</div>
         <div className="monthRow">
-          <div className="prevControl">Previous</div>
+          <div className="prevControl" onClick={this.onPrev}>
+            Previous
+          </div>
           <div className="month">{month}</div>
-          <div className="nextControl">Next</div>
+          <div className="nextControl" onClick={this.onNext}>
+            Next
+          </div>
         </div>
         <div className="contentCalendar">{dates}</div>
         <div className="calendarBtns">
