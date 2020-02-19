@@ -22,6 +22,8 @@ class Calendar extends React.Component {
 
   OnDateClick = e => {
     if (this.state.range.length < 2) {
+      const element = document.getElementById(e.target.id);
+      element.classList.add("highlight");
       const range = this.state.range;
       range.push(e.target.id);
       this.setState({ ...this.state, range });
@@ -31,6 +33,18 @@ class Calendar extends React.Component {
 
   handleApply = e => {
     this.props.applyDates();
+    this.props.hideModal();
+  };
+
+  handleCancel = () => {
+    if (this.state.range.length == 2) {
+      const element1 = document.getElementById(this.state.range[0]);
+      const element2 = document.getElementById(this.state.range[1]);
+      element1.classList.remove("highlight");
+      element2.classList.remove("highlight");
+      this.setState({ ...this.state, range: [] });
+    }
+
     this.props.hideModal();
   };
 
@@ -68,7 +82,7 @@ class Calendar extends React.Component {
           <div className="contentCalendar">{dates}</div>
           <div className="calendarBtns">
             <div className="button-cancel">
-              <button onClick={this.props.hideModal}>Cancel</button>
+              <button onClick={this.handleCancel}>Cancel</button>
             </div>
             <div className="button-apply">
               <button onClick={this.handleApply}>Apply</button>

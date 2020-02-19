@@ -110,7 +110,7 @@
   /* transform: translate(224px, 135px); */
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto;
-  width: 831px;
+  max-width: 831px;
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
@@ -238,4 +238,12 @@
 button:focus {
   outline: none;
   cursor: pointer;
+}
+
+.highlight {
+  width: 40px;
+  height: 40px;
+  background: rgba(75, 59, 148, 0.9);
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
 }
