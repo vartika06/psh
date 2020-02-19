@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 
 class Calendar extends React.Component {
   state = {
-    date: moment()
+    date: moment(),
+    range: []
   };
 
   onNext = () => {
@@ -19,39 +20,59 @@ class Calendar extends React.Component {
     });
   };
 
+  OnDateClick = e => {
+    if (this.state.range.length < 2) {
+      const range = this.state.range;
+      range.push(e.target.id);
+      this.setState({ ...this.state, range });
+    }
+    if (this.state.range.length == 2) this.props.addRange(this.state);
+  };
+
+  handleApply = e => {
+    this.props.applyDates();
+    this.props.hideModal();
+  };
+
   render() {
     const days = moment(this.state.date, "YYYY-MM").daysInMonth();
     const year = moment(this.state.date).format("YYYY");
     const month = moment(this.state.date).format("MMMM");
     const dates = [];
 
+    const myClass = this.props.show
+      ? "modal display-block"
+      : "modal display-none";
+
     for (let i = 1; i <= days; i++) {
       dates.push(
-        <div key={i} className="date">
+        <div id={i} key={i} className="date" onClick={this.OnDateClick}>
           {i}
         </div>
       );
     }
 
     return (
-      <div className="myCalendar">
-        <div className="calendarYear">Calendar {year}</div>
-        <div className="monthRow">
-          <div className="prevControl" onClick={this.onPrev}>
-            Previous
+      <div className={myClass}>
+        <div className="myCalendar">
+          <div className="calendarYear">Calendar {year}</div>
+          <div className="monthRow">
+            <div className="prevControl" onClick={this.onPrev}>
+              Previous
+            </div>
+            <div className="month">{month}</div>
+            <div className="nextControl" onClick={this.onNext}>
+              Next
+            </div>
           </div>
-          <div className="month">{month}</div>
-          <div className="nextControl" onClick={this.onNext}>
-            Next
-          </div>
-        </div>
-        <div className="contentCalendar">{dates}</div>
-        <div className="calendarBtns">
-          <div className="button-cancel">
-            <button>Cancel</button>
-          </div>
-          <div className="button-apply">
-            <button>Apply</button>
+          <div className="contentCalendar">{dates}</div>
+          <div className="calendarBtns">
+            <div className="button-cancel">
+              <button onClick={this.props.hideModal}>Cancel</button>
+            </div>
+            <div className="button-apply">
+              <button onClick={this.handleApply}>Apply</button>
+            </div>
           </div>
         </div>
       </div>
@@ -59,6 +80,10 @@ class Calendar extends React.Component {
   }
 }
 
-Calendar.propTypes = {};
+Calendar.propTypes = {
+  addRange: PropTypes.func.isRequired,
+  applyDates: PropTypes.func.isRequired,
+  hideModal: PropTypes.func.isRequired
+};
 
 export default Calendar;

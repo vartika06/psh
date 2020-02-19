@@ -11,7 +11,7 @@ const Thanks = props => {
 };
 
 Thanks.propTypes = {
-  company: PropTypes.object.isRequired
+  company: PropTypes.string.isRequired
 };
 
 export default Thanks;

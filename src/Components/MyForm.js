@@ -2,6 +2,8 @@ import React from "react";
 import Filter from "./Filter";
 import PropTypes from "prop-types";
 
+import moment from "moment";
+
 class MyForm extends React.Component {
   state = {
     company: ""
@@ -10,10 +12,21 @@ class MyForm extends React.Component {
   onSubmit = e => {
     e.preventDefault();
     this.props.addCompany(this.state.company);
-    this.setState({ company: "" });
+    //this.setState({ company: "" });
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  applyDates = () => {
+    const date1 = this.props.info.range[0];
+    const date2 = this.props.info.range[1];
+    const month = moment(this.props.info.date).format("MM");
+    const year = moment(this.props.info.date).format("YYYY");
+    const from = `${date1}/${month}/${year}`;
+    const to = `${date2}/${month}/${year}`;
+    document.getElementById("from").value = from;
+    document.getElementById("to").value = to;
+  };
 
   render() {
     return (
@@ -62,8 +75,16 @@ class MyForm extends React.Component {
               />
             </div>
           </div>
-          <Filter />
-          <input className="submitBtn" type="submit" value="Submit" />
+          <Filter addRange={this.props.addRange} applyDates={this.applyDates} />
+          <button className="submitBtn" onClick={this.props.handleSubmit}>
+            Submit
+          </button>
+          {/* <input
+            onSubmit={this.props.handleSubmit}
+            className="submitBtn"
+            type="submit"
+            value="Submit"
+          /> */}
         </form>
       </div>
     );
@@ -72,7 +93,9 @@ class MyForm extends React.Component {
 
 MyForm.propTypes = {
   addCompany: PropTypes.func.isRequired,
-  company: PropTypes.object.isRequired
+  addRange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  info: PropTypes.object.isRequired
 };
 
 export default MyForm;
