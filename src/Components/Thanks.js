@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 const Thanks = props => {
   return (
     <div>
-      <h1 className="thanksHeading">Thanks {props.company}</h1>
+      {console.log(props)}
+      <h1 className="thanksHeading">
+        Thanks {localStorage.getItem("company")}
+      </h1>
       <p className="thanksContent"> Your csv will be downloaded in a minute</p>
     </div>
   );

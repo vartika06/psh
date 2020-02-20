@@ -1,6 +1,7 @@
 import React from "react";
 import Filter from "./Filter";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 import moment from "moment";
 
@@ -13,6 +14,14 @@ class MyForm extends React.Component {
     e.preventDefault();
     this.props.addCompany(this.state.company);
     //this.setState({ company: "" });
+  };
+
+  handleSubmitBtn = () => {
+    if (this.props.info.submitted) {
+      localStorage.setItem("company", this.props.info.company);
+
+      window.open("/thanks", "_blank");
+    }
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -76,9 +85,10 @@ class MyForm extends React.Component {
             </div>
           </div>
           <Filter addRange={this.props.addRange} applyDates={this.applyDates} />
-          <button className="submitBtn" onClick={this.props.handleSubmit}>
+          <button className="submitBtn" onClick={this.handleSubmitBtn}>
             Submit
           </button>
+          {console.log(this.props.info.company)}
           {/* <input
             onSubmit={this.props.handleSubmit}
             className="submitBtn"
@@ -94,7 +104,6 @@ class MyForm extends React.Component {
 MyForm.propTypes = {
   addCompany: PropTypes.func.isRequired,
   addRange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
   info: PropTypes.object.isRequired
 };
 
