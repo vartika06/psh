@@ -48,11 +48,33 @@ class Calendar extends React.Component {
     this.props.hideModal();
   };
 
+  weekdayshort = moment.weekdaysShort();
+
   render() {
     const days = moment(this.state.date, "YYYY-MM").daysInMonth();
     const year = moment(this.state.date).format("YYYY");
     const month = moment(this.state.date).format("MMMM");
     const dates = [];
+    const firstDayOfMonth = moment(this.state.date)
+      .startOf("month")
+      .format("d");
+
+    let weekdayshortname = this.weekdayshort.map(day => {
+      return (
+        <div key={day} className="day">
+          {day}
+        </div>
+      );
+    });
+
+    let blanks = [];
+    for (let j = 0; j < firstDayOfMonth; j++) {
+      blanks.push(
+        <div key={j} className="blankSpace">
+          {" "}
+        </div>
+      );
+    }
 
     const myClass = this.props.show
       ? "modal display-block"
@@ -79,7 +101,13 @@ class Calendar extends React.Component {
               Next
             </div>
           </div>
-          <div className="contentCalendar">{dates}</div>
+
+          <div className="daysRow">{weekdayshortname}</div>
+
+          <div className="contentCalendar">
+            {blanks}
+            {dates}
+          </div>
           <div className="calendarBtns">
             <div className="button-cancel">
               <button onClick={this.handleCancel}>Cancel</button>

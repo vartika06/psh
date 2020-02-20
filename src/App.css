@@ -137,14 +137,30 @@
   display: grid;
   grid-template-columns: auto auto auto;
   grid-column: 1 / span 7;
-  padding: 15px;
+  padding: 10px;
+}
+
+.day {
+  padding: 5px;
+  justify-self: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+.daysRow {
+  display: grid;
+  background: rgba(0, 0, 0, 0.7);
+  grid-template-columns: auto auto auto auto auto auto auto;
+  grid-column: 1 / span 7;
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .contentCalendar {
   display: grid;
   grid-column: 1 / span 7;
   grid-template-columns: auto auto auto auto auto auto auto;
-  padding: 15px;
+  padding: 10px;
 }
 
 .prevControl {
@@ -244,6 +260,7 @@ button:focus {
   width: 40px;
   height: 40px;
   background: rgba(75, 59, 148, 0.9);
+  color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
 }
