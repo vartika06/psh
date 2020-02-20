@@ -29,22 +29,24 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <Switch>
-            <Route exact path="/">
-              <MyForm
-                addCompany={this.addCompany}
-                addRange={this.addRange}
-                info={this.state}
-              />{" "}
-              {console.log(this.state)}
-            </Route>
-            <Route path="/thanks">
-              <Thanks
-                company={this.state.company}
-                submitted={this.state.submitted}
-              />
-            </Route>
-          </Switch>
+          <div className="container">
+            <Switch>
+              <Route exact path="/">
+                <MyForm
+                  addCompany={this.addCompany}
+                  addRange={this.addRange}
+                  info={this.state}
+                />{" "}
+                {console.log(this.state)}
+              </Route>
+              <Route path="/thanks">
+                <Thanks
+                  company={this.state.company}
+                  submitted={this.state.submitted}
+                />
+              </Route>
+            </Switch>
+          </div>
         </div>
       </Router>
     );

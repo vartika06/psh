@@ -8,7 +8,7 @@ const Thanks = props => {
       <h1 className="thanksHeading">
         Thanks {localStorage.getItem("company")}
       </h1>
-      <p className="thanksContent"> Your csv will be downloaded in a minute</p>
+      <p className="thanksContent"> Your csv will be downloaded in a minute.</p>
     </div>
   );
 };

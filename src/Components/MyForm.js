@@ -39,64 +39,49 @@ class MyForm extends React.Component {
 
   render() {
     return (
-      <div>
-        <form className="formStyle" onSubmit={this.onSubmit}>
-          <h1 className="formHeading">Download your CSV</h1>
-          <div className="content">
-            <div className="field">
-              <label htmlFor="Company">Company</label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                style={{
-                  width: "526px",
-                  height: "40px",
-                  marginLeft: "135px"
-                }}
-                onChange={this.onChange}
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="from">From</label>
-              <input
-                type="text"
-                id="from"
-                name="from"
-                placeholder="DD/MM/YYYY"
-                style={{
-                  width: "151px",
-                  height: "39px",
-                  marginLeft: "170px"
-                }}
-              />
-              <label htmlFor="to" style={{ marginLeft: "140px" }}>
-                {" "}
-                To
-              </label>
-              <input
-                type="text"
-                id="to"
-                name="to"
-                placeholder="DD/MM/YYYY"
-                style={{ width: "171px", height: "41px", marginLeft: "40px" }}
-              />
-            </div>
+      <form className="formStyle" onSubmit={this.onSubmit}>
+        <h1 className="formHeading row">Download your CSV</h1>
+        <div className="field row">
+          <div className="col-lg-12">
+            <label htmlFor="Company">Company</label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              onChange={this.onChange}
+              style={{ width: "75%", height: "30px" }}
+            />
+          </div>
+        </div>
+        <div className="field row">
+          <div className="col-lg-5 col-sm-12">
+            <label htmlFor="from">From</label>
+            <input
+              type="text"
+              id="from"
+              name="from"
+              placeholder="DD/MM/YYYY"
+              style={{ width: "100%", height: "30px" }}
+            />
+          </div>
+          <div className="col-lg-5 col-sm-12 toField">
+            <label htmlFor="to"> To</label>
+            <input
+              type="text"
+              id="to"
+              name="to"
+              placeholder="DD/MM/YYYY"
+              style={{ width: "100%", height: "30px" }}
+            />
           </div>
           <Filter addRange={this.props.addRange} applyDates={this.applyDates} />
+        </div>
+        <div className="row">
           <button className="submitBtn" onClick={this.handleSubmitBtn}>
             Submit
           </button>
-          {console.log(this.props.info.company)}
-          {/* <input
-            onSubmit={this.props.handleSubmit}
-            className="submitBtn"
-            type="submit"
-            value="Submit"
-          /> */}
-        </form>
-      </div>
+        </div>
+      </form>
     );
   }
 }

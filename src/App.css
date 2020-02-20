@@ -62,26 +62,24 @@
   background: rgba(76, 175, 80, 0.8);
   border: 1px solid #4caf50;
   border-radius: 5px;
-  margin-left: 600px;
-  margin-top: 100px;
+
+  margin: 20px;
 }
 
 .field input {
-  margin-left: 15px;
   color: #000000;
   font-size: 12px;
   font-weight: normal;
   font-style: normal;
   text-decoration: none;
   text-align: left;
-  padding: 5px;
   background: #ffffff;
   border: 1px solid #bdbdbd;
   border-radius: 5px;
 }
 
 .filterBtn {
-  transform: translate(650px, -40px);
+  transform: translate(800px, -40px);
   width: 100px;
   height: 37px;
   color: #2196f3;
@@ -263,4 +261,31 @@ button:focus {
   color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  * {
+    font-size: 15px;
+  }
+
+  .formHeading {
+    font-size: 18px;
+  }
+  .filterBtn {
+    transform: translate(-180px, 10px);
+  }
+
+  .toField label {
+    margin-left: 0;
+  }
+
+  .thanksHeading {
+    font-size: 18px;
+    transform: translate(100px, 130px);
+  }
+
+  .thanksContent {
+    font-size: 15px;
+    transform: translate(100px, 155px);
+  }
 }
