@@ -26,14 +26,19 @@ class Calendar extends React.Component {
       element.classList.add("highlight");
       const range = this.state.range;
       range.push(e.target.id);
+      range.sort(function(a, b) {
+        return a - b;
+      }); //sorting the dates
       this.setState({ ...this.state, range });
     }
     if (this.state.range.length == 2) this.props.addRange(this.state);
   };
 
   handleApply = e => {
-    this.props.applyDates();
-    this.props.hideModal();
+    if (this.state.range.length == 2) {
+      this.props.applyDates();
+      this.props.hideModal();
+    }
   };
 
   handleCancel = () => {

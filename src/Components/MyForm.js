@@ -54,7 +54,7 @@ class MyForm extends React.Component {
           </div>
         </div>
         <div className="field row">
-          <div className="col-lg-5 col-sm-12">
+          <div className="col-lg-5 col-sm-12 col-xs-12">
             <label htmlFor="from">From</label>
             <input
               type="text"
