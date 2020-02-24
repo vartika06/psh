@@ -19,7 +19,6 @@ class MyForm extends React.Component {
   handleSubmitBtn = () => {
     if (this.props.info.submitted) {
       localStorage.setItem("company", this.props.info.company);
-
       window.open("/thanks", "_blank");
     }
   };
@@ -29,10 +28,10 @@ class MyForm extends React.Component {
   applyDates = () => {
     const date1 = this.props.info.range[0];
     const date2 = this.props.info.range[1];
-    const month = moment(this.props.info.date).format("MM");
-    const year = moment(this.props.info.date).format("YYYY");
-    const from = `${date1}/${month}/${year}`;
-    const to = `${date2}/${month}/${year}`;
+    //const month = moment(this.props.info.date).format("MM");
+    //const year = moment(this.props.info.date).format("YYYY");
+    const from = `${date1.d}/${date1.m}/${date1.y}`;
+    const to = `${date2.d}/${date2.m}/${date2.y}`;
     document.getElementById("from").value = from;
     document.getElementById("to").value = to;
   };

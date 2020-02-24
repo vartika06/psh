@@ -23,28 +23,51 @@ class Calendar extends React.Component {
   OnDateClick = e => {
     if (this.state.range.length < 2) {
       const element = document.getElementById(e.target.id);
+      const dateObject = {
+        d: e.target.id,
+        m: moment(this.state.date).format("MM"),
+        y: moment(this.state.date).format("YYYY")
+      };
+      //console.log(`${dateObject.d}/${dateObject.m}/${dateObject.y}`);
+      //console.log(element);
       element.classList.add("highlight");
       const range = this.state.range;
-      range.push(e.target.id);
+      range.push(dateObject);
       range.sort(function(a, b) {
-        return a - b;
+        const day1 = parseInt(a.d);
+        const day2 = parseInt(b.d);
+
+        const month1 = parseInt(a.m);
+        const month2 = parseInt(b.m);
+
+        const year1 = parseInt(a.y);
+        const year2 = parseInt(b.y);
+
+        return (
+          new Date(year1, month1, day1, 10, 33, 30, 0) -
+          new Date(year2, month2, day2, 10, 33, 30, 0)
+        );
       }); //sorting the dates
+      console.log(range);
       this.setState({ ...this.state, range });
     }
+
+    //console.log(this.state.range);
     if (this.state.range.length == 2) this.props.addRange(this.state);
   };
 
   handleApply = e => {
     if (this.state.range.length == 2) {
       this.props.applyDates();
+
       this.props.hideModal();
     }
   };
 
   handleCancel = () => {
     if (this.state.range.length == 2) {
-      const element1 = document.getElementById(this.state.range[0]);
-      const element2 = document.getElementById(this.state.range[1]);
+      const element1 = document.getElementById(this.state.range[0].d);
+      const element2 = document.getElementById(this.state.range[1].d);
       element1.classList.remove("highlight");
       element2.classList.remove("highlight");
       this.setState({ ...this.state, range: [] });
@@ -86,8 +109,14 @@ class Calendar extends React.Component {
       : "modal display-none";
 
     for (let i = 1; i <= days; i++) {
+      const myId = parseInt(
+        `${i}${moment(this.state.date).format("MM")}${moment(
+          this.state.date
+        ).format("YYYY")}`
+      );
+      console.log(myId);
       dates.push(
-        <div id={i} key={i} className="date" onClick={this.OnDateClick}>
+        <div id={myId} key={i} className="date" onClick={this.OnDateClick}>
           {i}
         </div>
       );
