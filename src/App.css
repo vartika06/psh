@@ -79,7 +79,8 @@
 }
 
 .filterBtn {
-  transform: translate(800px, -40px);
+  /* transform: translate(800px, -40px); */
+  transform: translate(-180px, 10px);
   width: 100px;
   height: 37px;
   color: #2196f3;
@@ -263,13 +264,13 @@ button:focus {
   border-radius: 5px;
 }
 
-@media (min-width: 481px) and (max-width: 767px) {
+@media (min-width: 100px) and (max-width: 767px) {
   * {
     font-size: 15px;
   }
 
   .formHeading {
-    font-size: 18px;
+    font-size: 20px;
   }
   .filterBtn {
     transform: translate(-180px, 10px);

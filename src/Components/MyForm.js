@@ -41,39 +41,46 @@ class MyForm extends React.Component {
       <form className="formStyle" onSubmit={this.onSubmit}>
         <h1 className="formHeading row">Download your CSV</h1>
         <div className="field row">
-          <div className="col-lg-12">
+          <div className="col-lg-12 form-group">
             <label htmlFor="Company">Company</label>
             <input
               type="text"
               id="company"
               name="company"
+              className="form-control"
               onChange={this.onChange}
               style={{ width: "75%", height: "30px" }}
             />
           </div>
         </div>
         <div className="field row">
-          <div className="col-lg-5 col-sm-12 col-xs-12">
+          <div className="col-lg-5 col-sm-12 col-xs-12 form-group">
             <label htmlFor="from">From</label>
             <input
               type="text"
               id="from"
               name="from"
+              className="form-control"
               placeholder="DD/MM/YYYY"
-              style={{ width: "100%", height: "30px" }}
+              style={{ width: "75%", height: "30px" }}
             />
           </div>
-          <div className="col-lg-5 col-sm-12 toField">
+          <div className="col-lg-5 col-sm-12 toField form-group">
             <label htmlFor="to"> To</label>
             <input
               type="text"
               id="to"
               name="to"
+              className="form-control"
               placeholder="DD/MM/YYYY"
-              style={{ width: "100%", height: "30px" }}
+              style={{ width: "75%", height: "30px" }}
             />
           </div>
-          <Filter addRange={this.props.addRange} applyDates={this.applyDates} />
+          <Filter
+            className="form-control"
+            addRange={this.props.addRange}
+            applyDates={this.applyDates}
+          />
         </div>
         <div className="row">
           <button className="submitBtn" onClick={this.handleSubmitBtn}>
