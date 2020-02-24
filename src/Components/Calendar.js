@@ -53,14 +53,36 @@ class Calendar extends React.Component {
     }
 
     //console.log(this.state.range);
-    if (this.state.range.length == 2) this.props.addRange(this.state);
+    if (this.state.range.length == 2) {
+      const unix1 = parseInt(
+        (
+          new Date(
+            `${this.state.range[0].y}.${this.state.range[0].m}.${this.state.range[0].d}`
+          ).getTime() / 1000
+        ).toFixed(0)
+      );
+      const unix2 = parseInt(
+        (
+          new Date(
+            `${this.state.range[1].y}.${this.state.range[1].m}.${this.state.range[1].d}`
+          ).getTime() / 1000
+        ).toFixed(0)
+      );
+      localStorage.setItem("unix1", unix1);
+      localStorage.setItem("unix2", unix2);
+      this.props.addRange(this.state);
+    }
   };
 
   handleApply = e => {
     if (this.state.range.length == 2) {
       this.props.applyDates();
-
       this.props.hideModal();
+      const element1 = document.getElementById(this.state.range[0].d);
+      const element2 = document.getElementById(this.state.range[1].d);
+      element1.classList.remove("highlight");
+      element2.classList.remove("highlight");
+      this.setState({ ...this.state, range: [] });
     }
   };
 

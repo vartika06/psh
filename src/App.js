@@ -27,7 +27,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router basename="/psh">
+      <Router>
         <div className="App">
           <div className="container">
             <Switch>
@@ -37,13 +37,10 @@ class App extends React.Component {
                   addRange={this.addRange}
                   info={this.state}
                 />{" "}
-                {/* {console.log(this.state)} */}
+                {console.log(this.state)}
               </Route>
               <Route path="/thanks">
-                <Thanks
-                  company={this.state.company}
-                  submitted={this.state.submitted}
-                />
+                <Thanks info={this.state} />
               </Route>
             </Switch>
           </div>
