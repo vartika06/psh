@@ -27,7 +27,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
+      <Router basename="/psh">
         <div className="App">
           <div className="container">
             <Switch>
