@@ -48,7 +48,7 @@ class Calendar extends React.Component {
           new Date(year2, month2, day2, 10, 33, 30, 0)
         );
       }); //sorting the dates
-      console.log(range);
+      // console.log(range);
       this.setState({ ...this.state, range });
     }
 
@@ -109,14 +109,8 @@ class Calendar extends React.Component {
       : "modal display-none";
 
     for (let i = 1; i <= days; i++) {
-      const myId = parseInt(
-        `${i}${moment(this.state.date).format("MM")}${moment(
-          this.state.date
-        ).format("YYYY")}`
-      );
-      console.log(myId);
       dates.push(
-        <div id={myId} key={i} className="date" onClick={this.OnDateClick}>
+        <div id={i} key={i} className="date" onClick={this.OnDateClick}>
           {i}
         </div>
       );

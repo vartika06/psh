@@ -37,7 +37,7 @@ class App extends React.Component {
                   addRange={this.addRange}
                   info={this.state}
                 />{" "}
-                {console.log(this.state)}
+                {/* {console.log(this.state)} */}
               </Route>
               <Route path="/thanks">
                 <Thanks
