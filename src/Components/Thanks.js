@@ -1,9 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 class Thanks extends React.Component {
   componentDidMount() {
     window.location.href = `http://py.lyzer.io/getCSV?companyKey=${localStorage.getItem(
+      "company"
+    )}&fromDate=${localStorage.getItem("unix1")}&toDate=${localStorage.getItem(
+      "unix2"
+    )}`;
+    window.location.href = `http://py.lyzer.io/getCSVSKUWise?companyKey=${localStorage.getItem(
       "company"
     )}&fromDate=${localStorage.getItem("unix1")}&toDate=${localStorage.getItem(
       "unix2"
@@ -19,6 +25,16 @@ class Thanks extends React.Component {
     // const year1 = parseInt(this.props.info.range[0].y);
     // const year2 = parseInt(this.props.info.range[1].y);
     console.log(this.props.info);
+    const link1 = `http://py.lyzer.io/getCSV?companyKey=${localStorage.getItem(
+      "company"
+    )}&fromDate=${localStorage.getItem("unix1")}&toDate=${localStorage.getItem(
+      "unix2"
+    )}`;
+    const link2 = `http://py.lyzer.io/getCSVSKUWise?companyKey=${localStorage.getItem(
+      "company"
+    )}&fromDate=${localStorage.getItem("unix1")}&toDate=${localStorage.getItem(
+      "unix2"
+    )}`;
     return (
       <div>
         <h1 className="thanksHeading">
@@ -28,6 +44,8 @@ class Thanks extends React.Component {
           {" "}
           Your csv will be downloaded in a minute.
         </p>
+        <p>{link1}</p>
+        <p>{link2}</p>
       </div>
     );
   }
