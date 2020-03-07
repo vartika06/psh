@@ -23,13 +23,23 @@ class MyForm extends React.Component {
     }
   };
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.props.addCompany(e.target.value);
+  };
 
   applyDates = () => {
     const date1 = this.props.info.range[0];
     const date2 = this.props.info.range[1];
-    //const month = moment(this.props.info.date).format("MM");
-    //const year = moment(this.props.info.date).format("YYYY");
+    console.log(date1, date2);
+    const unix1 = parseInt(
+      (new Date(`${date1.y}-${date1.m}-${date1.d}`).getTime() / 1000).toFixed(0)
+    );
+    const unix2 = parseInt(
+      (new Date(`${date2.y}-${date2.m}-${date2.d}`).getTime() / 1000).toFixed(0)
+    );
+    localStorage.setItem("unix1", unix1);
+    localStorage.setItem("unix2", unix2);
     const from = `${date1.d}/${date1.m}/${date1.y}`;
     const to = `${date2.d}/${date2.m}/${date2.y}`;
     document.getElementById("from").value = from;

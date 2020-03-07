@@ -3,9 +3,17 @@ import moment from "moment";
 import PropTypes from "prop-types";
 
 class Calendar extends React.Component {
+  from = React.createRef();
+  to = React.createRef();
+  highlight = React.createRef();
   state = {
     date: moment(),
-    range: []
+    range: [],
+    highlightDates: [],
+    betweenDates: [],
+    from: "",
+    to: "",
+    activeBtn: 0
   };
 
   onNext = () => {
@@ -20,18 +28,72 @@ class Calendar extends React.Component {
     });
   };
 
+  handleUpControl = () => {
+    this.setState({
+      date: moment(this.state.date, "YYYY-MM--DD").subtract(1, "year")
+    });
+  };
+
+  handleDownControl = () => {
+    this.setState({
+      date: moment(this.state.date, "YYYY-MM--DD").add(1, "year")
+    });
+  };
+
+  handleCancel = () => {
+    if (this.state.range.length == 2) {
+      this.setState({
+        ...this.state,
+        range: [],
+        highlightDates: [],
+        betweenDates: []
+      });
+    }
+    this.props.hideModal();
+  };
+
+  generateDate = dateObject => {
+    const day = parseInt(dateObject.d);
+    const month = parseInt(dateObject.m);
+    const year = parseInt(dateObject.y);
+    const date = moment(`${month}-${day}-${year}`, "MM-D-YYYY");
+    return date;
+  };
+
+  generateBetweenDates = (startDate, endDate) => {
+    let betweenDates = [];
+    let currentDate = moment(startDate).add(1, "day");
+    let stopDate = moment(endDate);
+    while (currentDate < stopDate) {
+      let i = moment(currentDate).format("D");
+      let m = moment(currentDate).format("MM");
+      let y = moment(currentDate).format("YYYY");
+      let d = parseInt(i + m + y);
+      betweenDates.push(d);
+      currentDate = moment(currentDate).add(1, "days");
+    }
+    return betweenDates;
+  };
   OnDateClick = e => {
-    if (this.state.range.length < 2) {
-      const element = document.getElementById(e.target.id);
+    let highlightDates = [...this.state.highlightDates];
+    let betweenDates = [...this.state.betweenDates];
+    let range = [...this.state.range];
+    if (highlightDates.length >= 2) {
+      highlightDates = [];
+      betweenDates = [];
+      range = [];
+      this.setState({ ...this.state, range, highlightDates, betweenDates });
+    }
+    if (highlightDates.length < 2) {
+      this.from.current.value = "";
+      this.to.current.value = "";
+      highlightDates.push(e.target.dataset.id);
       const dateObject = {
-        d: e.target.id,
-        m: moment(this.state.date).format("MM"),
-        y: moment(this.state.date).format("YYYY")
+        d: e.target.dataset.d,
+        m: e.target.dataset.month,
+        y: e.target.dataset.year,
+        month: e.target.dataset.monthname
       };
-      //console.log(`${dateObject.d}/${dateObject.m}/${dateObject.y}`);
-      //console.log(element);
-      element.classList.add("highlight");
-      const range = this.state.range;
       range.push(dateObject);
       range.sort(function(a, b) {
         const day1 = parseInt(a.d);
@@ -47,65 +109,400 @@ class Calendar extends React.Component {
           new Date(year1, month1, day1, 10, 33, 30, 0) -
           new Date(year2, month2, day2, 10, 33, 30, 0)
         );
-      }); //sorting the dates
-      // console.log(range);
-      this.setState({ ...this.state, range });
-    }
+      });
+      this.setState({
+        ...this.state,
+        range,
+        highlightDates,
+        betweenDates,
+        activeBtn: 0
+      });
 
-    //console.log(this.state.range);
-    if (this.state.range.length == 2) {
-      const unix1 = parseInt(
-        (
-          new Date(
-            `${this.state.range[0].y}.${this.state.range[0].m}.${this.state.range[0].d}`
-          ).getTime() / 1000
-        ).toFixed(0)
-      );
-      const unix2 = parseInt(
-        (
-          new Date(
-            `${this.state.range[1].y}.${this.state.range[1].m}.${this.state.range[1].d}`
-          ).getTime() / 1000
-        ).toFixed(0)
-      );
-      localStorage.setItem("unix1", unix1);
-      localStorage.setItem("unix2", unix2);
-      this.props.addRange(this.state);
+      if (range.length == 2) {
+        let startDate = this.generateDate(range[0]);
+        let endDate = this.generateDate(range[1]);
+        betweenDates = this.generateBetweenDates(startDate, endDate);
+        this.setState({ ...this.state, range, highlightDates, betweenDates });
+        this.props.addRange(range);
+      }
     }
   };
 
-  handleApply = e => {
+  generateClass = d => {
+    let arr = [...this.state.highlightDates];
+    let dateClass = "date";
+    //console.log(arr, d);
+    for (let j = 0; j < arr.length; j++) {
+      if (parseInt(arr[j]) == d) dateClass = "date highlight";
+    }
+    arr = [...this.state.betweenDates];
+    for (let j = 0; j < arr.length; j++) {
+      if (parseInt(arr[j]) == d) dateClass = "date highlight-range";
+    }
+
+    return dateClass;
+  };
+
+  generateBlanks = firstDayOfMonth => {
+    let blanks = [];
+    for (let j = 0; j < firstDayOfMonth; j++) {
+      blanks.push(
+        <div key={j} className="blankSpace">
+          {" "}
+        </div>
+      );
+    }
+    return blanks;
+  };
+
+  generateDates = (days, month, year, monthName) => {
+    let dates = [];
+    for (let i = 1; i <= days; i++) {
+      let d = parseInt(i + month + year);
+      dates.push(
+        <div
+          data-id={d}
+          data-d={i}
+          data-month={month}
+          data-year={year}
+          data-monthname={monthName}
+          key={i}
+          className={this.generateClass(d)}
+          onClick={this.OnDateClick}
+        >
+          {i}
+        </div>
+      );
+    }
+    return dates;
+  };
+
+  applyRange = range => {
+    const date1 = range[0];
+    const date2 = range[1];
+    const from = `${date1.d}-${date1.m}-${date1.y}`;
+    const to = `${date2.d}-${date2.m}-${date2.y}`;
+    this.from.current.value = from;
+    this.to.current.value = to;
+  };
+
+  addCustomRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range, activeBtn: 1 });
+    this.from.current.value = "";
+    this.to.current.value = "";
+    this.from.current.focus();
+  };
+
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  onApply = () => {
     if (this.state.range.length == 2) {
       this.props.applyDates();
       this.props.hideModal();
-      const element1 = document.getElementById(this.state.range[0].d);
-      const element2 = document.getElementById(this.state.range[1].d);
-      element1.classList.remove("highlight");
-      element2.classList.remove("highlight");
-      this.setState({ ...this.state, range: [] });
     }
   };
-
-  handleCancel = () => {
-    if (this.state.range.length == 2) {
-      const element1 = document.getElementById(this.state.range[0].d);
-      const element2 = document.getElementById(this.state.range[1].d);
-      element1.classList.remove("highlight");
-      element2.classList.remove("highlight");
-      this.setState({ ...this.state, range: [] });
+  handleApply = e => {
+    if (this.state.from && this.state.to) {
+      let range = [];
+      let arr = this.state.from.split("-");
+      let dateObject = {
+        d: parseInt(arr[0]),
+        m: arr[1],
+        y: arr[2],
+        month: moment(parseInt(arr[1]), "MM").format("MMM")
+      };
+      range.push(dateObject);
+      let d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+      let highlightDates = [d];
+      arr = this.state.to.split("-");
+      dateObject = {
+        d: parseInt(arr[0]),
+        m: arr[1],
+        y: arr[2],
+        month: moment(parseInt(arr[1]), "MM").format("MMM")
+      };
+      range.push(dateObject);
+      d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+      highlightDates.push(d);
+      let startDate = this.generateDate(range[0]);
+      let endDate = this.generateDate(range[1]);
+      let betweenDates = this.generateBetweenDates(startDate, endDate);
+      this.setState({ ...this.state, range, highlightDates, betweenDates });
+      this.props.addRange(range);
     }
+    this.onApply();
+  };
 
-    this.props.hideModal();
+  addTodayAsRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range });
+    let dateObject = {
+      d: moment().format("D"),
+      m: moment().format("MM"),
+      y: moment().format("YYYY"),
+      month: moment().format("MMM")
+    };
+    range.push(dateObject);
+    range.push(dateObject);
+    const d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    const highlightDates = [d];
+    highlightDates.push(d);
+    this.setState({
+      ...this.state,
+      date: moment(),
+      range,
+      highlightDates,
+      betweenDates: [],
+      activeBtn: 2
+    });
+    this.applyRange(range);
+    this.props.addRange(range);
+  };
+
+  addYesterdayAsRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range });
+    const dateObject = {
+      d: moment()
+        .subtract(1, "day")
+        .format("D"),
+      m: moment()
+        .subtract(1, "day")
+        .format("MM"),
+      y: moment()
+        .subtract(1, "day")
+        .format("YYYY"),
+      month: moment()
+        .subtract(1, "day")
+        .format("MMM")
+    };
+    range.push(dateObject);
+    range.push(dateObject);
+    const d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    const highlightDates = [d];
+    highlightDates.push(d);
+    this.setState({
+      ...this.state,
+      date: moment(),
+      range,
+      highlightDates,
+      betweenDates: [],
+      activeBtn: 3
+    });
+    this.applyRange(range);
+    this.props.addRange(range);
+  };
+
+  addLastSevenAsRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range });
+
+    let dateObject = {
+      d: moment()
+        .subtract(7, "day")
+        .format("D"),
+      m: moment()
+        .subtract(7, "day")
+        .format("MM"),
+      y: moment()
+        .subtract(7, "day")
+        .format("YYYY"),
+      month: moment()
+        .subtract(7, "day")
+        .format("MMM")
+    };
+    range.push(dateObject);
+    let d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    const highlightDates = [d];
+    dateObject = {
+      d: moment().format("D"),
+      m: moment().format("MM"),
+      y: moment().format("YYYY"),
+      month: moment().format("MMM")
+    };
+    range.push(dateObject);
+    d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    highlightDates.push(d);
+    let startDate = this.generateDate(range[0]);
+    let endDate = this.generateDate(range[1]);
+    let betweenDates = this.generateBetweenDates(startDate, endDate);
+    this.setState({
+      ...this.state,
+      date: moment(),
+      range,
+      highlightDates,
+      betweenDates,
+      activeBtn: 4
+    });
+    this.applyRange(range);
+    this.props.addRange(range);
+  };
+
+  addLastThirtyAsRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range });
+
+    let dateObject = {
+      d: moment()
+        .subtract(30, "day")
+        .format("D"),
+      m: moment()
+        .subtract(30, "day")
+        .format("MM"),
+      y: moment()
+        .subtract(30, "day")
+        .format("YYYY"),
+      month: moment()
+        .subtract(30, "day")
+        .format("MMM")
+    };
+    range.push(dateObject);
+    let d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    const highlightDates = [d];
+    dateObject = {
+      d: moment().format("D"),
+      m: moment().format("MM"),
+      y: moment().format("YYYY"),
+      month: moment().format("MMM")
+    };
+    range.push(dateObject);
+    d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    highlightDates.push(d);
+    let startDate = this.generateDate(range[0]);
+    let endDate = this.generateDate(range[1]);
+    let betweenDates = this.generateBetweenDates(startDate, endDate);
+    this.setState({
+      ...this.state,
+      date: moment(),
+      range,
+      highlightDates,
+      betweenDates,
+      activeBtn: 5
+    });
+    this.applyRange(range);
+    this.props.addRange(range);
+  };
+
+  addLastMonthAsRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range });
+
+    let dateObject = {
+      d: moment().format("1"),
+      m: moment()
+        .subtract(1, "month")
+        .format("MM"),
+      y: moment()
+        .subtract(1, "month")
+        .format("YYYY"),
+      month: moment()
+        .subtract(1, "month")
+        .format("MMM")
+    };
+
+    range.push(dateObject);
+    let d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    const highlightDates = [d];
+    dateObject = {
+      d: moment()
+        .subtract(1, "month")
+        .daysInMonth(),
+      m: moment()
+        .subtract(1, "month")
+        .format("MM"),
+      y: moment()
+        .subtract(1, "month")
+        .format("YYYY"),
+      month: moment()
+        .subtract(1, "month")
+        .format("MMM")
+    };
+    range.push(dateObject);
+    d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    highlightDates.push(d);
+    let startDate = this.generateDate(range[0]);
+    let endDate = this.generateDate(range[1]);
+    let betweenDates = this.generateBetweenDates(startDate, endDate);
+    this.setState({
+      ...this.state,
+      date: moment(),
+      range,
+      highlightDates,
+      betweenDates,
+      activeBtn: 6
+    });
+    this.applyRange(range);
+    this.props.addRange(range);
+  };
+
+  addThisMonthAsRange = () => {
+    let range = [];
+    this.setState({ ...this.state, range });
+    let dateObject = {
+      d: moment().format("1"),
+      m: moment().format("MM"),
+      y: moment().format("YYYY"),
+      month: moment().format("MMM")
+    };
+    range.push(dateObject);
+    let d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    const highlightDates = [d];
+    dateObject = {
+      d: moment().daysInMonth(),
+      m: moment().format("MM"),
+      y: moment().format("YYYY"),
+      month: moment().format("MMM")
+    };
+    range.push(dateObject);
+    d = parseInt(dateObject.d + dateObject.m + dateObject.y);
+    highlightDates.push(d);
+    let startDate = this.generateDate(range[0]);
+    let endDate = this.generateDate(range[1]);
+    let betweenDates = this.generateBetweenDates(startDate, endDate);
+    this.setState({
+      ...this.state,
+      date: moment(),
+      range,
+      highlightDates,
+      betweenDates,
+      activeBtn: 7
+    });
+    this.applyRange(range);
+    this.props.addRange(range);
   };
 
   weekdayshort = moment.weekdaysShort();
-
   render() {
-    const days = moment(this.state.date, "YYYY-MM").daysInMonth();
-    const year = moment(this.state.date).format("YYYY");
-    const month = moment(this.state.date).format("MMMM");
-    const dates = [];
-    const firstDayOfMonth = moment(this.state.date)
+    const { open, rootCloseEvent } = this.props;
+    const currentDays = moment(this.state.date, "YYYY-MM").daysInMonth();
+    const currentYear = moment(this.state.date).format("YYYY");
+    const currentMonth = moment(this.state.date).format("MMMM");
+    const currentMonthName = moment(this.state.date).format("MMM");
+    const currentMonthNumber = moment(this.state.date).format("MM");
+    const currentFirstDayOfMonth = moment(this.state.date)
+      .startOf("month")
+      .format("d");
+
+    const previousDays = moment(this.state.date, "YYYY-MM")
+      .subtract(1, "month")
+      .daysInMonth();
+    const previousYear = moment(this.state.date)
+      .subtract(1, "month")
+      .format("YYYY");
+    const previousMonth = moment(this.state.date)
+      .subtract(1, "month")
+      .format("MMMM");
+    const previousMonthName = moment(this.state.date)
+      .subtract(1, "month")
+      .format("MMM");
+    const previousMonthNumber = moment(this.state.date)
+      .subtract(1, "month")
+      .format("MM");
+    const previousFirstDayOfMonth = moment(this.state.date)
+      .subtract(1, "month")
       .startOf("month")
       .format("d");
 
@@ -117,53 +514,205 @@ class Calendar extends React.Component {
       );
     });
 
-    let blanks = [];
-    for (let j = 0; j < firstDayOfMonth; j++) {
-      blanks.push(
-        <div key={j} className="blankSpace">
-          {" "}
-        </div>
-      );
-    }
+    const { hide } = this.state;
+    const { activeBtn } = this.state;
 
     const myClass = this.props.show
       ? "modal display-block"
       : "modal display-none";
 
-    for (let i = 1; i <= days; i++) {
-      dates.push(
-        <div id={i} key={i} className="date" onClick={this.OnDateClick}>
-          {i}
-        </div>
-      );
-    }
-
     return (
       <div className={myClass}>
-        <div className="myCalendar">
-          <div className="calendarYear">Calendar {year}</div>
-          <div className="monthRow">
-            <div className="prevControl" onClick={this.onPrev}>
-              Previous
+        <div className="date-filter">
+          <div className={hide ? "calendar hide" : "calendar"}>
+            <div className="calendar-year mt-3">
+              <i
+                className="fa fa-angle-up upControl"
+                aria-hidden="true"
+                onClick={this.handleUpControl}
+              ></i>
+              Year {currentYear}
+              <i
+                className="fa fa-angle-down  downControl"
+                aria-hidden="true"
+                onClick={this.handleDownControl}
+              ></i>
             </div>
-            <div className="month">{month}</div>
-            <div className="nextControl" onClick={this.onNext}>
-              Next
-            </div>
-          </div>
+            <div className="previous myCalendar">
+              <div className="from-date">
+                <input
+                  id="from"
+                  name="from"
+                  type="text"
+                  ref={this.from}
+                  placeholder="DD-MM-YYYY"
+                  onChange={this.handleChange}
+                />
+              </div>
 
-          <div className="daysRow">{weekdayshortname}</div>
+              <div className="monthRow">
+                <div className="prevControl" onClick={this.onPrev}>
+                  <i
+                    className="fa fa-angle-left"
+                    aria-hidden="true"
+                    style={{ fontSize: "14px" }}
+                  ></i>
+                </div>
+                <div className="previous-month">
+                  {previousMonth} {previousYear}
+                </div>
+              </div>
 
-          <div className="contentCalendar">
-            {blanks}
-            {dates}
-          </div>
-          <div className="calendarBtns">
-            <div className="button-cancel">
-              <button onClick={this.handleCancel}>Cancel</button>
+              <div className="daysRow">{weekdayshortname}</div>
+
+              <div className="contentCalendar">
+                {this.generateBlanks(previousFirstDayOfMonth)}
+                {this.generateDates(
+                  previousDays,
+                  previousMonthNumber,
+                  previousYear,
+                  previousMonthName
+                )}
+              </div>
             </div>
-            <div className="button-apply">
-              <button onClick={this.handleApply}>Apply</button>
+
+            <div className="current myCalendar">
+              <div className="to-date">
+                <input
+                  type="text"
+                  id="to"
+                  name="to"
+                  ref={this.to}
+                  placeholder="DD-MM-YYYY"
+                  onChange={this.handleChange}
+                />
+              </div>
+
+              <div className="monthRow">
+                <div className="current-month">
+                  {currentMonth} {currentYear}
+                </div>
+                <div className="nextControl" onClick={this.onNext}>
+                  <i
+                    className="fa fa-angle-right"
+                    aria-hidden="true"
+                    style={{ fontSize: "14px" }}
+                  ></i>
+                </div>
+              </div>
+
+              <div className="daysRow">{weekdayshortname}</div>
+
+              <div className="contentCalendar">
+                {this.generateBlanks(currentFirstDayOfMonth)}
+                {this.generateDates(
+                  currentDays,
+                  currentMonthNumber,
+                  currentYear,
+                  currentMonthName
+                )}
+              </div>
+            </div>
+
+            <div className="options">
+              <div>
+                {" "}
+                <button
+                  className={
+                    activeBtn && activeBtn == 1
+                      ? " optionsBtn custom-range active-button"
+                      : " optionsBtn custom-range"
+                  }
+                  onClick={this.addCustomRange}
+                >
+                  Custom Range
+                </button>
+              </div>
+              <div>
+                {" "}
+                <button
+                  className={
+                    activeBtn && activeBtn == 2
+                      ? " optionsBtn today active-button"
+                      : " optionsBtn today"
+                  }
+                  onClick={this.addTodayAsRange}
+                >
+                  Today
+                </button>
+              </div>
+              <div>
+                {" "}
+                <button
+                  className={
+                    activeBtn && activeBtn == 3
+                      ? " optionsBtn yesterday active-button"
+                      : " optionsBtn yesterday"
+                  }
+                  onClick={this.addYesterdayAsRange}
+                >
+                  Yesterday
+                </button>
+              </div>
+              <div>
+                {" "}
+                <button
+                  className={
+                    activeBtn && activeBtn == 4
+                      ? " optionsBtn last-seven active-button"
+                      : " optionsBtn last-seven"
+                  }
+                  onClick={this.addLastSevenAsRange}
+                >
+                  Last 7 Days
+                </button>
+              </div>
+              <div>
+                <button
+                  className={
+                    activeBtn && activeBtn == 5
+                      ? " optionsBtn last-thirty active-button"
+                      : " optionsBtn last-thirty"
+                  }
+                  onClick={this.addLastThirtyAsRange}
+                >
+                  Last 30 Days
+                </button>
+              </div>
+              <div>
+                {" "}
+                <button
+                  className={
+                    activeBtn && activeBtn == 6
+                      ? " optionsBtn last-month active-button"
+                      : " optionsBtn last-month"
+                  }
+                  onClick={this.addLastMonthAsRange}
+                >
+                  Last Month
+                </button>
+              </div>
+              <div>
+                {" "}
+                <button
+                  className={
+                    activeBtn && activeBtn == 7
+                      ? " optionsBtn this-month active-button"
+                      : " optionsBtn this-month"
+                  }
+                  onClick={this.addThisMonthAsRange}
+                >
+                  This Month
+                </button>
+              </div>
+            </div>
+            <div className="calendarBtns row">
+              <div className="button-cancel col-2 ">
+                <button onClick={this.handleCancel}>Cancel</button>
+              </div>
+              <div className="button-apply col-3">
+                <button onClick={this.handleApply}>Apply</button>
+              </div>
             </div>
           </div>
         </div>

@@ -17,12 +17,11 @@ class App extends React.Component {
 
   addCompany = name => {
     this.setState({ company: name });
+    localStorage.setItem("company", name);
   };
 
-  addRange = calendar => {
-    const date = calendar.date;
-    const range = calendar.range;
-    this.setState({ ...this.state, date, range, submitted: true });
+  addRange = range => {
+    this.setState({ ...this.state, range, submitted: true });
   };
 
   render() {

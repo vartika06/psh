@@ -105,20 +105,30 @@
   background: rgba(0, 0, 0, 0.6);
 }
 
-.myCalendar {
-  /* transform: translate(224px, 135px); */
+.calendar {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
-  max-width: 831px;
-  background: #fff;
+  grid-template-columns: auto auto auto;
+  background: white;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 0px rgba(189, 189, 189, 1);
   padding: 10px;
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 20%;
+  left: 20%;
+  -webkit-transform: inherit !important;
+  -moz-transform: inherit !important;
+  -o-transform: inherit !important;
+  transform: inherit !important;
+}
+
+.myCalendar {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  background: #fff;
+  margin-top: 15px;
+  margin-left: 20px;
+  padding: 5px;
 }
 
 .display-block {
@@ -128,30 +138,64 @@
 .display-none {
   display: none;
 }
+
+.calendar {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background: white;
+}
+.calendar-year {
+  grid-column: 1 / span 3;
+  padding-left: 220px;
+  color: rgba(75, 59, 148, 0.9);
+  font-size: 21px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.upControl {
+  margin-right: 20px;
+}
+.downControl {
+  margin-left: 20px;
+}
+.upControl,
+.downControl {
+  color: #2196f3;
+  font-weight: bold;
+}
+
+.options {
+  padding: 10px;
+}
+.from-date,
+.to-date {
+  grid-column: 1 / span 7;
+}
+
 .myCalendar:hover {
   cursor: pointer;
 }
 
 .monthRow {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto;
   grid-column: 1 / span 7;
-  padding: 10px;
+  font-size: 10px;
 }
 
 .day {
   padding: 5px;
   justify-self: center;
   font-weight: bold;
-  color: #fff;
+  color: #000;
+  font-size: 12px;
 }
 
 .daysRow {
   display: grid;
-  background: rgba(0, 0, 0, 0.7);
   grid-template-columns: auto auto auto auto auto auto auto;
   grid-column: 1 / span 7;
-  padding: 10px;
   border-radius: 8px;
 }
 
@@ -159,109 +203,178 @@
   display: grid;
   grid-column: 1 / span 7;
   grid-template-columns: auto auto auto auto auto auto auto;
-  padding: 10px;
+  height: 125px;
 }
-
 .prevControl {
-  grid-column: 1 / span 2;
+  justify-self: start;
+  margin-left: 12px;
+}
+.previous-month {
+  justify-self: start;
+}
+.current-month {
   justify-self: end;
 }
-
-.month {
-  grid-column: 3 / span 3;
-  justify-self: center;
-  color: #212121;
-  font-size: 21px;
+.previous-month,
+.current-month {
+  color: #000;
+  font-size: 14px;
   font-weight: bold;
 }
-
 .nextControl {
-  grid-column: 6 / span 2;
-  justify-self: start;
+  justify-self: end;
+  margin-right: 12px;
 }
 
 .calendarYear {
   grid-column: 1 / span 7;
   color: #4b3b94;
-  font-size: 28px;
+
   font-weight: bold;
   font-style: normal;
   text-decoration: none;
   text-align: left;
-  padding-left: 5px;
 }
 
 .prevControl,
 .nextControl {
   color: #2196f3;
-  font-size: 18px;
+
   font-weight: bold;
 }
 
 .date {
-  padding: 15px;
   justify-self: center;
-  color: #9e9e9e;
-  font-size: 17px;
-}
-
-.calendarBtns {
-  grid-column: 1 / span 7;
-  display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
-}
-
-.button-cancel {
-  grid-column: 1 / span 6;
-  justify-self: end;
-}
-
-.button-cancel button {
-  width: 100px;
-  height: 32px;
-  color: #ffffff;
-  font-family: "Source Sans Pro";
-  font-size: 12px;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: none;
-  text-align: center;
-  background: rgba(244, 67, 54);
-  border: 1px solid #f44336;
+  color: rgba(75, 59, 148, 0.9);
+  font-size: 14px;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  margin: 2px;
   border-radius: 5px;
-}
-
-.button-apply {
-  justify-self: center;
-}
-
-.button-apply button {
-  width: 100px;
-  height: 32px;
-  color: #ffffff;
-  font-family: "Source Sans Pro";
-  font-size: 12px;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: none;
   text-align: center;
-  background: rgba(76, 175, 80);
-  border: 1px solid #4caf50;
+}
+
+.date:hover {
+  background: rgba(75, 59, 148, 0.9);
+  color: #fff;
+}
+
+.optionsBtn {
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+.today,
+.yesterday,
+.last-seven,
+.last-thirty,
+.last-month,
+.this-month,
+.custom-range {
+  background: #e0e0e0;
+  border: 1px solid #f5f5f5;
   border-radius: 5px;
+  text-align: center;
+  color: rgba(75, 59, 148, 0.9);
+  font-weight: 550;
+}
+.today,
+.yesterday,
+.last-seven,
+.last-thirty,
+.last-month,
+.this-month {
+  margin-top: 20px;
+}
+
+.optionsBtn:hover {
+  color: #fff;
+  background: rgba(75, 59, 148, 0.9);
+}
+
+.active-button {
+  color: #fff;
+  background: rgba(75, 59, 148, 0.9);
 }
 
 button:focus {
   outline: none;
+}
+
+button:hover {
   cursor: pointer;
 }
 
-.highlight {
-  width: 40px;
+input {
+  color: #757575;
+  padding: 5px;
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
+  border-radius: 3px;
+}
+
+.from-date input {
+  float: right;
+}
+
+.calendarBtns {
+  grid-column: 1 / span 3;
+  margin-top: 45px;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+}
+
+.button-cancel button,
+.button-apply button {
+  color: #ffffff;
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  border-radius: 15px;
+  margin: 10px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.button-cancel {
+  grid-column: 1 / span 8;
+  justify-self: end;
+  margin-left: 100px;
+}
+
+.button-apply {
+  justify-self: end;
+}
+
+.button-cancel button {
+  background: rgba(244, 67, 54, 0.8);
+  border: 1px solid #f44336;
+}
+
+.button-apply button {
+  background: rgba(76, 175, 80, 0.8);
+  border: 1px solid #4caf50;
+}
+
+.optionsBtn {
+  width: 110px;
   height: 40px;
+  margin-top: 10px;
+  font-size: 12px;
+  margin-left: 20px;
+}
+
+.highlight {
   background: rgba(75, 59, 148, 0.9);
   color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
+}
+
+.highlight-range {
+  background: rgba(199, 189, 242, 0.7);
+}
+
+.hide {
+  display: none;
 }
 
 @media (min-width: 100px) and (max-width: 767px) {
